@@ -1,6 +1,8 @@
 PDFHunter
 =========
 
+**Requires scapy for pcap analysis**
+
 Looks for pdf files in pcap files and rebuilds them
 
 Usage is ./pdf-hunter.py <pcap file> <file location>

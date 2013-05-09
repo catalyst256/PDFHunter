@@ -70,6 +70,8 @@ f = f[firstcut:]
 if int(total_lines) - int(secondcut) != 0:
 	final_cut = int(total_lines) - int(secondcut)
 	f = f[:-final_cut]
+	outfile2.writelines(f)
+	outfile2.close()
 else:
 	outfile2.writelines(f)
 	outfile2.close()

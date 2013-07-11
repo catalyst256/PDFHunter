@@ -5,7 +5,7 @@
 # Usage is ./pdf-hunter.py <pcap file> <file location>
 # e.g. ./pdf-hunter.py pdftest.pcap /tmp/out.pdf
 
-import os, logging, sys
+import os, logging, sys, hashlib
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 from scapy.all import *
 
@@ -16,6 +16,7 @@ if len(sys.argv) != 3:
 pkts = rdpcap(sys.argv[1])
 
 artifact = 'Content-Type: application/pdf'
+file_length = ''
 ack = ''
 cfile = []
 start = str('%PDF-')
@@ -25,7 +26,7 @@ pdffile = sys.argv[2]
 outfile = open(tmpfile, 'w')
 outfile2 = open(pdffile, 'w')
 
-
+print '[+] Starting the PDF Hunt..'
 
 # Search through pcap file and look for anything that has a content type of pdf, save the TCP ACK as a variable
 for x in pkts:
@@ -76,5 +77,18 @@ else:
 	outfile2.writelines(f)
 	outfile2.close()
 
+# Time to delete the temporary file
+cmd = 'rm -f ' + tmpfile
+os.system(cmd)
+print '[-] Temporary file deleted ' + str(tmpfile)
+
+# Hash the retrieved file with MD5
+filehash = ''
+fh = open(pdffile, 'r')
+filehash = hashlib.md5(fh.read()).hexdigest() 
+
+# Print the file location + hash value
 print '[+] File written to: ' + str(pdffile)
+print '[!] File hash is: ' + str(filehash)
+
 
